@@ -8,7 +8,6 @@ export default defineConfig({
       babel: {
         plugins: [
           // 处理 styled-components
-
           [
             "babel-plugin-styled-components",
             {

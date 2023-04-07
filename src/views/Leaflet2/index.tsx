@@ -88,41 +88,45 @@ export default function Leaflet2() {
   // const
   const addMarkers = () => {
     const data: L.LatLngBoundsExpression = [[22.97935, 113.17509], [22.98680, 113.030550]]
-    const list: L.Layer[] = 
-    data.map((v: any) => {
-      return L.marker(v, {
-        icon: iconCon(),
-      })
-        .bindPopup(popupCon(v), {
-          //绑定弹出框
-          closeButton: false,
-          keepInView: false, //在边界弹出时，不会被边界遮挡
-          offset: L.point(0, -16), //往上偏移，不遮挡标点
+    
+    const center = L.polyline(data, {
+      color: 'transparent'
+    }).addTo(map as any).getCenter()
+    const list: L.Layer[] =
+      data.map((v: any) => {
+        return L.marker(v, {
+          icon: iconCon(),
         })
-      .on("mouseover",  function() {
-        const self: any = (this as any)
-        //鼠标移入事件
-        self.openPopup();
+          .bindPopup(popupCon(v), {
+            //绑定弹出框
+            closeButton: false,
+            keepInView: false, //在边界弹出时，不会被边界遮挡
+            offset: L.point(0, -16), //往上偏移，不遮挡标点
+          })
+          .on("mouseover", () => {
+            // @ts-ignore
+            const self: any = this
+            //鼠标移入事件
+            self.openPopup();
+          })
+          .on("mouseout", () => {
+            // @ts-ignore
+            const self: any = this
+            //鼠标移出事件
+            self.closePopup();
+          })
+        // .on("click", function (e) {
+        //   //鼠标点击事件，可以弹出弹出框
+        //   setModalData(item);
+        //   setModalOpen(true);
+        // });
       })
-      .on("mouseout",  function() {
-        const self: any = (this as any)
-        //鼠标移出事件
-        self.closePopup();
-      })
-      // .on("click", function (e) {
-      //   //鼠标点击事件，可以弹出弹出框
-      //   setModalData(item);
-      //   setModalOpen(true);
-      // });
-    })
     console.log('test-list', list)
     const group = L.layerGroup(list);
     // setMarkList(group);
     map?.addLayer(group);
-    // 获取地图的中心
-    // map?.getCenter()
     //刷新地图对象
-    map?.setView(data[0]);
+    map?.setView(center);
   }
   useEffect(() => {
     if (!cleanContainer()) return

@@ -3,7 +3,7 @@ node 16.18.1
 运行 pnpm i
 运行 pnpm run dev
 
-react + vite + ts + leaflet
+react + vite + ts + leaflet + redux + react-router-dom
 
 # react18 使用 <react.StrictMode></react.StrictMode> 会导致 useEffect(()=> {}, [])内的方法执行两次
 
