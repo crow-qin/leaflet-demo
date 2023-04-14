@@ -3,6 +3,7 @@ const urlTemplate = {
   url1: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
   /** 可用，清晰*/
   url2: 'http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',
+  url3: `https://restapi.amap.com/v3/staticmap?location={y},{x}&zoom=10&size=750*300&key=${import.meta.env.VITE_APP_MAP_KEY}`,
   //在mapbox自定义的影像地图
   mapbox_Image:
     "https://api.mapbox.com/styles/v1/yqcim/cizh1ma3400ez2so5x1anhuzo/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoieXFjaW0iLCJhIjoiY2l6ZmhnZjExMDBhajJ4cGxnNGN5MnhpdCJ9.pcZtdfk8mSFboCdwqkvW6g",

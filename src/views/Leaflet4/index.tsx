@@ -18,36 +18,37 @@ export default function Leaflet4() {
   const [map, setMap] = useState<L.Map | null>(null)
   const group = useRef<L.FeatureGroup<any> | any>(null)
   const [kw, setKw] = useState('')
-
-  const addPloyLine = (arr: any[], center: any) => {
+  const [list, setList] = useState<any[]>([])
+  const [data, setData] = useState<any>({})
+  // 添加多边形
+  const addPloyLine = ({polyline, center, name}: any) => {
     clearGroup()
-    for (let v of arr) {
-      const vArr = v.split('|')
-      for (let v1 of vArr) {
-        const v1Arr = v1.split(';').map((v1: string) => v1.split(',').reverse())
-        let ployLine = L.polygon(v1Arr, {
-          color: '#0084ff',
-          fillOpacity: 0,
-          weight: 3
-        })
-
-        group.current.addLayer(ployLine)
-      }
-      group.current.on('mouseover', (e: any) => {
-        group.current.setStyle({
-          color: '#c91623'
-        })
-        .bindPopup('xxx')
-        .openPopup()
+    const vArr: any[] = polyline.split('|')
+    for (let v1 of vArr) {
+      const v1Arr = v1.split(';').map((v1: string) => v1.split(',').reverse())
+      let ployLine = L.polygon(v1Arr, {
+        color: '#0084ff',
+        fillOpacity: 0,
+        weight: 3
       })
-      group.current.on('mouseout', (e: any) => {
-        group.current
+
+      group.current.addLayer(ployLine)
+    }
+    group.current.on('mouseover', (e: any) => {
+      group.current.setStyle({
+        color: '#c91623'
+      })
+        .bindPopup(name)
+        .openPopup()
+    })
+    group.current.on('mouseout', (e: any) => {
+      group.current
         .setStyle({
           color: '#0084ff'
         })
         .closePopup()
-      })
-    }
+    })
+
     map?.setView(center.split(',').reverse())
   }
 
@@ -59,6 +60,16 @@ export default function Leaflet4() {
       const g = new L.FeatureGroup().addTo(map)
       group.current = g
     }
+  }
+  const drawMap = (data: any) => {
+    addPloyLine(data)
+  }
+  const getLatLngs = () => {
+    fetch(
+      `https://restapi.amap.com/v3/config/district?key=${import.meta.env.VITE_APP_MAP_KEY}&keywords=${kw}&extensions=all`).then(res => res.json()).then(res => {
+        console.log('test-res', res)
+        setList(res.districts || [])
+      })
   }
   useEffect(() => {
     if (!cleanContainer(id)) return
@@ -79,14 +90,25 @@ export default function Leaflet4() {
 
   return <Wrapper className="page-ctx">
     <div>绘制行政区边界</div>
-    <input type="text" onInput={(e: any) =>  setKw(e?.target?.value)} />
-    <button onClick={() => addPloyLine(arr, newCenter)}>绘制</button>
+    <input type="text" onInput={(e: any) => setKw(e?.target?.value)} />
+    <button onClick={() => getLatLngs()}>查询</button>
+    {/* <button onClick={() => addPloyLine(arr, newCenter)}>绘制</button> */}
     <button onClick={() => clearGroup()}>清除</button>
+    <div>
+      {list.map(v => (
+        <div className='item' onClick={() => drawMap(v)} key={v.adcode}>{v.name}</div>
+      )
+      )}
+    </div>
     <div id={id} className='map-box'></div>
   </Wrapper>
 }
 const Wrapper = styled.div`
   .map-box {
     height: 600px;
+  }
+  .item {
+    line-height: 30px;
+    cursor: pointer;
   }
 `

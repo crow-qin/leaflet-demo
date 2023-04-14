@@ -2,7 +2,7 @@
 //   declare 'react-router-dom'
 // }
 declare module "styled-components";
-declare module "leaflet" {
+declare module leaflet {
   function animatedMarker(any, any): any;
   class AnimatedMarker {
     constructor(latlng: any, options?: any);
@@ -10,6 +10,9 @@ declare module "leaflet" {
   class Marker {
     initialize: (any, any) => any;
   }
+}
+declare interface ImportMetaEnv {
+  VITE_APP_MAP_KEY: string
 }
 // declare module "redux";
 

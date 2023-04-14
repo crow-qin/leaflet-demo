@@ -1,0 +1,5 @@
+{
+  "globals": {
+    "VITE_APP_MAP_KEY": "readonly"
+  }
+}
